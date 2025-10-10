@@ -37,8 +37,14 @@ void Application::mainMenu()
 			clear();
 			break;
 		case 2:
+			clear();
+			appList();
+			clear();
 			break;
 		case 3:
+			clear();
+			appStation();
+			clear();
 			break;
 		case 0:
 			return;
@@ -48,16 +54,15 @@ void Application::mainMenu()
 	}
 }
 
-void Application::arrayMenu()
+void Application::workMenu()
 {
-	cout << "1 - Create and fill array\n"; // done
-	cout << "2 - Print array elements\n"; // done
-	cout << "3 - Insert element\n"; // done
+	cout << "1 - Create and fill\n"; //done
+	cout << "2 - Print elements\n"; //done
+	cout << "3 - Insert element\n"; //done 
 	cout << "4 - Delete element by index\n"; // done
-	cout << "5 - Get an element by index\n"; // done
-	cout << "6 - Swap elements\n";
-	cout << "7 - Sort\n"; // done
-	cout << "0 - Exit\n" << "> ";
+	cout << "5 - Get an element by index\n"; //done
+	cout << "6 - Swap elements\n"; 
+	cout << "0 - Exit\n" << "> "; //done
 
 }
 
@@ -70,7 +75,7 @@ int Application::appArray()
 	auto* array = new Array<int>();
 	while (true)
 	{
-		arrayMenu();
+		workMenu();
 		cin >> choice;
 		clearInputStream();
 		switch (choice)
@@ -137,14 +142,6 @@ int Application::appArray()
 			array->print();
 			cout << endl;
 			break;
-		case 7:
-			array->insertionSort();
-			clear();
-			cout << "Sorted array: ";
-			array->print();
-			cout << endl;
-			break;
-
 		case 0:
 			delete array;
 			return 0;
@@ -153,5 +150,156 @@ int Application::appArray()
 			break;
 		}
 	}
-	
+
+}
+
+int Application::appList()
+{
+	short index, index1,index2;
+	int choice, value;
+	auto* list = new List<int>();
+	while (true)
+	{
+		workMenu();
+		cin >> choice;
+		clearInputStream();
+		switch (choice)
+		{
+		case 1:
+			cout << "Input numbers please: ";
+			delete list;
+			list = new List<int>();
+			while (cin >> value) {
+				list->pushBack(value);
+				if (cin.peek() == '\n') {
+					break;
+				}
+			}
+			clearInputStream();
+			clear();
+			cout << "Your current list: ";
+			list->print();
+			cout << endl;
+			break;
+		case 2:
+			clear();
+			cout << "List contents: ";
+			list->print();
+			cout << endl;
+			break;
+		case 3:
+			cout << "Input index and value please: ";
+			cin >> index; cin >> value;
+			if (cin.fail())
+			{
+				clearInputStream();
+				cout << "\nНеверный ввод";
+				break;
+			}
+			list->insert(index, value);
+			clear();
+			cout << "List contents: ";
+			list->print();
+			cout << endl;
+			break;
+		case 4:
+			cout << "Input index please: ";
+			cin >> index;
+			if (cin.fail())
+			{
+				clearInputStream();
+				cout << "\nНеверный ввод";
+				break;
+			}
+			list->deleteKnot(index);
+			clear();
+			cout << "List contents: ";
+			list->print();
+			cout << endl;
+			break;
+		case 5:
+			cout << "Input index please: ";
+			cin >> index;
+			if (cin.fail())
+			{
+				clearInputStream();
+				cout << "\nНеверный ввод";
+				break;
+			}
+			clearInputStream();
+			clear();
+			if (list->getKnot(index) != nullptr) {
+				cout << "Element at index " << index << ": " << list->getKnot(index)->values << endl << endl;
+			}
+			else {
+				cout << "Invalid index!" << endl << endl;
+			}
+			break;
+		case 6:
+			cout << "Input index1 and index2 please: ";
+			cin >> index1; cin >> index2;
+			if (cin.fail())
+			{
+				clearInputStream();
+				cout << "\nНеверный ввод";
+				break;
+			}
+			list->swap(index1, index2);
+			clear();
+			cout << "Array contents: ";
+			list->print();
+			cout << endl;
+			break;
+
+		case 0:
+			delete list;
+			return 0;
+		default:
+			break;
+		}
+	}
+
+}
+
+int Application::appStation()
+{
+	SortStation station;
+	string input;
+	int choise;
+	bool flag = false;
+
+	while (true) 
+	{
+		cout << "1 - Convert the expression to reverse Polish notation\n";
+		cout << "0 - Exit\n" << "> "; 
+		cin >> choise;
+		switch (choise) {
+		case 1:
+			cout << "Input expression: ";
+			clearInputStream();
+			input = station.getString();
+			input = station.ReversPolishnotation(input, flag);
+			if (flag == true || input.empty()) 
+			{
+				cout << "Error expression";
+				break;
+			}
+			if (station.calculateValue(input)) 
+			{
+				cout << "Expression in reverse Polish notation: " << input;
+			}
+			else 
+			{
+				cout << "Error expression";
+			}
+			break;
+		case 0:
+			return 0;
+		default:
+			cout << "Error expression";
+			break;
+		}
+		cout << "\n";
+	}
+
 }

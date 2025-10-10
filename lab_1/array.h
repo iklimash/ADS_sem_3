@@ -4,7 +4,8 @@
 
 using namespace std;
 
-template<typename type> class Array
+template<typename type> 
+class Array
 {
 public:
 
@@ -16,25 +17,25 @@ public:
 	Array(int size);
 	~Array();
 
-	/*bool empty();*/
-
 	void pushBack(const type& value);
 	void print();
 	void insertElement(short index, type value);
 	void deleteElement(short index);
 	void swap(short index1, short index2);
-	type *getElement(short index);
-	void insertionSort();
+	type* getElement(short index);
+
 };
 
-template <typename type> Array<type>::Array()
+template <typename type> 
+Array<type>::Array()
 {
 	currSize = 0;
 	capacity = 5;
 	array = new type[capacity];
 }
 
-template <typename type> Array<type>::Array(int size)
+template <typename type> 
+Array<type>::Array(int size)
 {
 	if (size < 0)
 	{
@@ -44,19 +45,15 @@ template <typename type> Array<type>::Array(int size)
 	array = new type[capacity];
 }
 
-template <typename type> Array<type>::~Array()
+template <typename type> 
+Array<type>::~Array()
 {
 	delete[] array;
 	array = nullptr;
 }
 
-//template <typename type> bool Array<type>::empty()
-//{
-//	if (currSize == 0) return true;
-//	return false;
-//}
-
-template <typename type> void Array<type>::pushBack(const type& value)
+template <typename type> 
+void Array<type>::pushBack(const type& value)
 {
 	if (currSize >= capacity)
 	{
@@ -77,7 +74,8 @@ template <typename type> void Array<type>::pushBack(const type& value)
 
 }
 
-template <typename type> void Array<type>::print()
+template <typename type> 
+void Array<type>::print()
 {
 	if (currSize == 0) return;
 	cout << '[';
@@ -91,10 +89,11 @@ template <typename type> void Array<type>::print()
 	cout << ']' << endl;
 }
 
-template <typename type> void Array<type>::insertElement(short index, type value)
+template <typename type> 
+void Array<type>::insertElement(short index, type value)
 {
 	if (index < 0 || index > currSize) return;
-	
+
 	if (index == currSize)
 	{
 		this->pushBack(value);
@@ -132,7 +131,8 @@ template <typename type> void Array<type>::insertElement(short index, type value
 	array = temp;
 }
 
-template <typename type> void Array<type>::deleteElement(short index)
+template <typename type> 
+void Array<type>::deleteElement(short index)
 {
 	if (index < 0 || index > currSize) return;
 	capacity--;
@@ -150,35 +150,22 @@ template <typename type> void Array<type>::deleteElement(short index)
 	array = temp;
 }
 
-template <typename type> type* Array<type>::getElement(short index)
+template <typename type> 
+type* Array<type>::getElement(short index)
 {
 	if (index < 0 || index >= currSize) return nullptr;
 	return array + index;
 }
-template <typename type> void Array<type>::swap(short index1, short index2)
+template <typename type> 
+void Array<type>::swap(short index1, short index2)
 {
 	if (index1 < 0 || index1 >= currSize || index2 < 0 || index2 >= currSize) {
 		return;
 	}
 
 	if (index1 != index2) {
-		type temp = array[index1];     
-		array[index1] = array[index2];  
-		array[index2] = temp;        
-	}
-}
-
-template <typename type> void Array<type>::insertionSort()
-{
-	for (size_t i = 0; i < currSize; ++i)
-	{
-		type key = array[i];
-		int j = i - 1;
-		while (j >= 0 && array[j] > key)
-		{
-			array[j + 1] = array[j];
-			j--;
-		}
-		array[j + 1] = key;
+		type temp = array[index1];
+		array[index1] = array[index2];
+		array[index2] = temp;
 	}
 }
