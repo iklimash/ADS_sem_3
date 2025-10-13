@@ -1,7 +1,7 @@
 #include "application.h"
 
-#include <iostream>\
-
+#include <iostream>
+#include <limits>
 
 using namespace std;
 
@@ -58,10 +58,10 @@ void Application::workMenu()
 {
 	cout << "1 - Create and fill\n"; //done
 	cout << "2 - Print elements\n"; //done
-	cout << "3 - Insert element\n"; //done 
+	cout << "3 - Insert element\n"; //done
 	cout << "4 - Delete element by index\n"; // done
 	cout << "5 - Get an element by index\n"; //done
-	cout << "6 - Swap elements\n"; 
+	cout << "6 - Swap elements\n";
 	cout << "0 - Exit\n" << "> "; //done
 
 }
@@ -193,7 +193,7 @@ int Application::appList()
 			if (cin.fail())
 			{
 				clearInputStream();
-				cout << "\nНеверный ввод";
+				cout << "\nпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ";
 				break;
 			}
 			list->insert(index, value);
@@ -208,7 +208,7 @@ int Application::appList()
 			if (cin.fail())
 			{
 				clearInputStream();
-				cout << "\nНеверный ввод";
+				cout << "\nпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ";
 				break;
 			}
 			list->deleteKnot(index);
@@ -223,7 +223,7 @@ int Application::appList()
 			if (cin.fail())
 			{
 				clearInputStream();
-				cout << "\nНеверный ввод";
+				cout << "\nпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ";
 				break;
 			}
 			clearInputStream();
@@ -241,7 +241,7 @@ int Application::appList()
 			if (cin.fail())
 			{
 				clearInputStream();
-				cout << "\nНеверный ввод";
+				cout << "\nпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ";
 				break;
 			}
 			list->swap(index1, index2);
@@ -268,10 +268,10 @@ int Application::appStation()
 	int choise;
 	bool flag = false;
 
-	while (true) 
+	while (true)
 	{
 		cout << "1 - Convert the expression to reverse Polish notation\n";
-		cout << "0 - Exit\n" << "> "; 
+		cout << "0 - Exit\n" << "> ";
 		cin >> choise;
 		switch (choise) {
 		case 1:
@@ -279,16 +279,16 @@ int Application::appStation()
 			clearInputStream();
 			input = station.getString();
 			input = station.ReversPolishnotation(input, flag);
-			if (flag == true || input.empty()) 
+			if (flag == true || input.empty())
 			{
 				cout << "Error expression";
 				break;
 			}
-			if (station.calculateValue(input)) 
+			if (station.calculateValue(input))
 			{
 				cout << "Expression in reverse Polish notation: " << input;
 			}
-			else 
+			else
 			{
 				cout << "Error expression";
 			}

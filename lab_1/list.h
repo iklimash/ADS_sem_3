@@ -4,7 +4,7 @@
 
 using namespace std;
 
-template<typename type> 
+template<typename type>
 class ListKnot
 {
 public:
@@ -47,8 +47,8 @@ ListKnot<type>::ListKnot(type inputValues)
 	next = prev = nullptr;
 }
 
-template<typename type> 
-List<type>::List() 
+template<typename type>
+List<type>::List()
 {
 	len = 0;
 	head = tail = nullptr;
@@ -66,7 +66,7 @@ short List<type>::length()
 	return len;
 }
 
-template<typename type> 
+template<typename type>
 void List<type>::pushFront(type values) {
 
 	ListKnot<type>* knot = new ListKnot<type>(values);
@@ -98,7 +98,7 @@ void List<type>::pushBack(type values)
 	++len;
 }
 
-template<typename type> 
+template<typename type>
 void List<type>::popFront() {
 
 	if (head == nullptr) return;
@@ -132,7 +132,7 @@ void List<type>::popBack()
 	--len;
 
 }
-template<typename type> 
+template<typename type>
 void List<type>::deleteKnot(short index) {
 
 	ListKnot<type>* knot = getKnot(index);
@@ -197,7 +197,7 @@ void List<type>::insert(short index, int value)
 }
 
 template<typename type>
-void List<type>::swap(short index1, short index2) 
+void List<type>::swap(short index1, short index2)
 {
 
 	if (index1 == index2) return;
@@ -219,7 +219,7 @@ void List<type>::swap(short index1, short index2)
 
 
 	if (node1->next == node2) {
-		
+
 		node1->next = next2;
 		node1->prev = node2;
 		node2->next = node1;
@@ -232,13 +232,13 @@ void List<type>::swap(short index1, short index2)
 		else tail = node1;
 	}
 	else {
-		
+
 		node1->next = next2;
 		node1->prev = prev2;
 		node2->next = next1;
 		node2->prev = prev1;
 
-		
+
 		if (prev1) prev1->next = node2;
 		else head = node2;
 
@@ -256,15 +256,15 @@ template<typename type>
 void List<type>::print()
 {
 	cout << '[';
-	ListKnot<type>* current = head;  
-	while (current != nullptr)       
+	ListKnot<type>* current = head;
+	while (current != nullptr)
 	{
 		cout << current->values;
-		if (current->next != nullptr)  
+		if (current->next != nullptr)
 		{
 			cout << ", ";
 		}
-		current = current->next;  
+		current = current->next;
 	}
 	cout << ']' << endl;
 }

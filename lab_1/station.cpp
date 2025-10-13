@@ -1,8 +1,9 @@
 #include "station.h"
+#include <cmath>
 
 using namespace std;
 
-string SortStation::getString() 
+string SortStation::getString()
 {
     string input;
     getline(cin, input);
@@ -31,37 +32,37 @@ int SortStation::priority(char c) {
     }
 }
 
-string SortStation::ReversPolishnotation(string& inputString, bool& flag) 
+string SortStation::ReversPolishnotation(string& inputString, bool& flag)
 {
     auto* stack = new Stack<string>();
     string output;
     string  curr;
     int len = inputString.length();
-    for (int i = 0; i < len; i++) 
+    for (int i = 0; i < len; i++)
     {
         if (curr == "sin" || curr == "cos")
         {
             stack->pushFront(curr, 2);
             curr.clear();
         }
-        switch (priority(inputString[i])) 
+        switch (priority(inputString[i]))
         {
         case -1:
             curr.push_back(inputString[i]);
             break;
         case 0:
-            if (!curr.empty()) 
+            if (!curr.empty())
             {
                 output += curr + " ";
                 curr.clear();
             }
-            if (inputString[i] == '(') 
+            if (inputString[i] == '(')
             {
                 stack->pushFront("(", 0);
             }
             else {
                 while (true) {
-                    if (stack->head == nullptr) 
+                    if (stack->head == nullptr)
                     {
                         flag = true;
                         return " ";
@@ -77,17 +78,17 @@ string SortStation::ReversPolishnotation(string& inputString, bool& flag)
         case 1:
         case 2:
         case 3:
-            if (!curr.empty()) 
+            if (!curr.empty())
             {
                 output += curr + " ";
                 curr.clear();
             }
-            if (stack->head == nullptr || stack->head->priority < priority(inputString[i])) 
+            if (stack->head == nullptr || stack->head->priority < priority(inputString[i]))
             {
                 stack->pushFront(inputString.substr(i, 1), priority(inputString[i]));
             }
             else {
-                while (stack->head != nullptr && stack->head->priority >= priority(inputString[i])) 
+                while (stack->head != nullptr && stack->head->priority >= priority(inputString[i]))
                 {
                     output += stack->head->values;
                     output.push_back(' ');
@@ -97,7 +98,7 @@ string SortStation::ReversPolishnotation(string& inputString, bool& flag)
             }
             break;
         case 10:
-            if (!curr.empty()) 
+            if (!curr.empty())
             {
                 output += curr + " ";
                 curr.clear();
@@ -105,7 +106,7 @@ string SortStation::ReversPolishnotation(string& inputString, bool& flag)
             break;
         }
     }
-    if (!curr.empty()) 
+    if (!curr.empty())
     {
         output += curr + " ";
         curr.clear();
@@ -119,7 +120,7 @@ string SortStation::ReversPolishnotation(string& inputString, bool& flag)
     return output;
 }
 
-bool SortStation::calculateValue(string& output) 
+bool SortStation::calculateValue(string& output)
 {
     auto* stack = new Stack<string>();
     string curr;
@@ -127,11 +128,11 @@ bool SortStation::calculateValue(string& output)
     double variable = 0;
     int len = output.length();
 
-    for (int i = 0; i < len; i++) 
+    for (int i = 0; i < len; i++)
     {
-        if (output[i] != ' ') 
+        if (output[i] != ' ')
         {
-            switch (priority(output[i])) 
+            switch (priority(output[i]))
             {
             case -1:
                 curr.push_back(output[i]);
@@ -141,19 +142,19 @@ bool SortStation::calculateValue(string& output)
             case 1:
             case 2:
             case 3:
-                if (stack->head == stack->tail) 
+                if (stack->head == stack->tail)
                 {
                     cout << "\nError! Small amount operands\n";
                     return false;
                 }
-                if (!isdigit(stack->head->values[0])) 
+                if (!isdigit(stack->head->values[0]))
                 {
                     variable = 1;
                 }
                 else variable = stod(stack->head->values);
                 result = variable;
                 stack->popFront();
-                if (output[i] == '/' && result == 0) 
+                if (output[i] == '/' && result == 0)
                 {
                     cout << "\nDon't divide by zero\n";
                     return false;
@@ -175,16 +176,16 @@ bool SortStation::calculateValue(string& output)
             }
         }
         else {
-            if (!curr.empty()) 
+            if (!curr.empty())
             {
                 if (curr == "sin")
                 {
-                    if (stack->head == nullptr) 
+                    if (stack->head == nullptr)
                     {
                         cout << "\nError! Small amount operands\n";
                         return false;
                     }
-                    if (!isdigit(stack->head->values[0])) 
+                    if (!isdigit(stack->head->values[0]))
                     {
                         variable = 1;
                     }
@@ -194,14 +195,14 @@ bool SortStation::calculateValue(string& output)
                     curr = to_string(result);
                     stack->pushFront(curr, -1);
                 }
-                else if (curr == "cos") 
+                else if (curr == "cos")
                 {
-                    if (stack->head == nullptr) 
+                    if (stack->head == nullptr)
                     {
                         cout << "\nError! Small amount operands\n";
                         return false;
                     }
-                    if (!isdigit(stack->head->values[0])) 
+                    if (!isdigit(stack->head->values[0]))
                     {
                         variable = 0;
                     }
@@ -211,7 +212,7 @@ bool SortStation::calculateValue(string& output)
                     curr = to_string(result);
                     stack->pushFront(curr, -1);
                 }
-                else 
+                else
                 {
                     stack->pushFront(curr, -1);
                 }
@@ -219,7 +220,7 @@ bool SortStation::calculateValue(string& output)
             }
         }
     }
-    if (stack->head != stack->tail) 
+    if (stack->head != stack->tail)
     {
         cout << "\nError! Small amount operands\n";
         return false;

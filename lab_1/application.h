@@ -9,12 +9,12 @@ class Application
 
 public:
 
-	Application();
+    Application();
 
-	void mainMenu();
-	void workMenu();
+    void mainMenu();
+    void workMenu();
 
-	int appArray();
-	int appList();
-	int appStation();
+    int appArray();
+    int appList();
+    int appStation();
 };

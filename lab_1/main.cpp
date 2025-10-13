@@ -4,8 +4,8 @@
 
 int main()
 {
-	Application a;
-	a.mainMenu();
-	return 0;
+    Application a;
+    a.mainMenu();
+    return 0;
 }
 

@@ -9,36 +9,36 @@ class SortStation
 {
 public:
 
-	string getString();
-	
-	int priority(char c);
+    string getString();
 
-	double operation(double a, double b, char c);
+    int priority(char c);
 
-	bool calculateValue(string& output);
+    double operation(double a, double b, char c);
+
+    bool calculateValue(string& output);
 
     string ReversPolishnotation(std::string& inputString, bool& flag);
 
 };
 
-template<typename type> 
+template<typename type>
 class StackKnot{
 public:
-	type values;
-	int priority;
-	StackKnot* next;
-	StackKnot(type& inputValues, int inputPriority);
+    type values;
+    int priority;
+    StackKnot* next;
+    StackKnot(type& inputValues, int inputPriority);
 };
 
-template<typename type> 
+template<typename type>
 StackKnot<type>::StackKnot(type& inputValues, int inputPriority) {
 
-	values = inputValues;
-	priority = inputPriority;
-	next = nullptr;
+    values = inputValues;
+    priority = inputPriority;
+    next = nullptr;
 }
 
-template<typename type> 
+template<typename type>
 class Stack {
 public:
     StackKnot<type> *head;
@@ -50,12 +50,12 @@ public:
     void pushFront(type inputValues, int inputPriority);
     void popFront();
 
-    
+
 };
 
 
 
-template<typename type> 
+template<typename type>
 Stack<type>::Stack() : head(nullptr), tail(nullptr) {}
 
 
@@ -68,7 +68,7 @@ Stack<type>::~Stack()
 
 
 template<typename type>
-void Stack<type>::pushFront(type inputValues, int inputPriority) 
+void Stack<type>::pushFront(type inputValues, int inputPriority)
 {
     auto* node = new StackKnot<type>(inputValues, inputPriority);
     node->next = head;
@@ -77,8 +77,8 @@ void Stack<type>::pushFront(type inputValues, int inputPriority)
 }
 
 
-template<typename type> 
-void Stack<type>::popFront() 
+template<typename type>
+void Stack<type>::popFront()
 {
     if (head == nullptr) return;
     if (head == tail) {
