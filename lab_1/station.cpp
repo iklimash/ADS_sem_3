@@ -77,26 +77,46 @@ string SortStation::ReversPolishnotation(string& inputString, bool& flag)
             break;
         case 1:
         case 2:
-        case 3:
-            if (!curr.empty())
-            {
-                output += curr + " ";
-                curr.clear();
-            }
-            if (stack->head == nullptr || stack->head->priority < priority(inputString[i]))
-            {
-                stack->pushFront(inputString.substr(i, 1), priority(inputString[i]));
-            }
-            else {
-                while (stack->head != nullptr && stack->head->priority >= priority(inputString[i]))
+                if (!curr.empty())
                 {
-                    output += stack->head->values;
-                    output.push_back(' ');
-                    stack->popFront();
+                    output += curr + " ";
+                    curr.clear();
                 }
-                stack->pushFront(inputString.substr(i, 1), priority(inputString[i]));
-            }
-            break;
+                if (stack->head == nullptr || stack->head->priority < priority(inputString[i]))
+                {
+                    stack->pushFront(inputString.substr(i, 1), priority(inputString[i]));
+                }
+                else {
+                    while (stack->head != nullptr && stack->head->priority >= priority(inputString[i]))
+                    {
+                        output += stack->head->values;
+                        output.push_back(' ');
+                        stack->popFront();
+                    }
+                    stack->pushFront(inputString.substr(i, 1), priority(inputString[i]));
+                }
+                break;
+        case 3:
+                // Обработка оператора ^
+                if (!curr.empty())
+                {
+                    output += curr + " ";
+                    curr.clear();
+                }
+                if (stack->head == nullptr || stack->head->priority < priority(inputString[i]))
+                {
+                    stack->pushFront(inputString.substr(i, 1), priority(inputString[i]));
+                }
+                else {
+                    while (stack->head != nullptr && stack->head->priority > priority(inputString[i]))
+                    {
+                        output += stack->head->values;
+                        output.push_back(' ');
+                        stack->popFront();
+                    }
+                    stack->pushFront(inputString.substr(i, 1), priority(inputString[i]));
+                }
+                break;
         case 10:
             if (!curr.empty())
             {
