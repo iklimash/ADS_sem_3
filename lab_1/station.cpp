@@ -42,7 +42,7 @@ string SortStation::ReversPolishnotation(string& inputString, bool& flag)
     {
         if (curr == "sin" || curr == "cos")
         {
-            stack->pushFront(curr, 2);
+            stack->pushFront(curr, 4);
             curr.clear();
         }
         switch (priority(inputString[i]))
@@ -60,42 +60,46 @@ string SortStation::ReversPolishnotation(string& inputString, bool& flag)
             {
                 stack->pushFront("(", 0);
             }
-            else {
-                while (true) {
-                    if (stack->head == nullptr)
-                    {
-                        flag = true;
-                        return " ";
-                    }
-                    if (stack->head->values == "(") break;
-                    output += stack->head->values;
-                    output.push_back(' ');
+            else
+            {
+                while (stack->head != nullptr && stack->head->values != "(")
+                {
+                    output += stack->head->values + " ";
                     stack->popFront();
                 }
+                if (stack->head == nullptr)
+                {
+                    flag = true;
+                    delete stack;
+                    return " ";
+                }
                 stack->popFront();
+
+                if (stack->head != nullptr &&
+                    (stack->head->values == "sin" || stack->head->values == "cos"))
+                {
+                    output += stack->head->values + " ";
+                    stack->popFront();
+                }
             }
             break;
         case 1:
         case 2:
-                if (!curr.empty())
-                {
-                    output += curr + " ";
-                    curr.clear();
+            if (!curr.empty()) {
+                output += curr + " ";
+                curr.clear();
+            }
+            if (stack->head == nullptr || stack->head->priority < priority(inputString[i])) {
+                stack->pushFront(inputString.substr(i, 1), priority(inputString[i]));
+            } else {
+                while (stack->head != nullptr && stack->head->priority >= priority(inputString[i])) {
+                    output += stack->head->values;
+                    output.push_back(' ');
+                    stack->popFront();
                 }
-                if (stack->head == nullptr || stack->head->priority < priority(inputString[i]))
-                {
-                    stack->pushFront(inputString.substr(i, 1), priority(inputString[i]));
-                }
-                else {
-                    while (stack->head != nullptr && stack->head->priority >= priority(inputString[i]))
-                    {
-                        output += stack->head->values;
-                        output.push_back(' ');
-                        stack->popFront();
-                    }
-                    stack->pushFront(inputString.substr(i, 1), priority(inputString[i]));
-                }
-                break;
+                stack->pushFront(inputString.substr(i, 1), priority(inputString[i]));
+            }
+            break;
         case 3:
                 // Обработка оператора ^
                 if (!curr.empty())
@@ -137,6 +141,8 @@ string SortStation::ReversPolishnotation(string& inputString, bool& flag)
         stack->popFront();
     }
     delete stack;
+    if (!output.empty() && output.back() == ' ')
+        output.pop_back();
     return output;
 }
 
