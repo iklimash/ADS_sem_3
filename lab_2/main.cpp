@@ -4,7 +4,7 @@
 
 using namespace std;
 
-int MIN_RUN = 32;
+int MIN_RUN = 64;
 
 template<typename type>
 void insertSort(type array[], int left, int right)
@@ -67,6 +67,30 @@ void merge(type array[], int left, int mid, int right)
     delete[] arrRight;
 }
 
+template<typename type>
+int findRun (type array[], int left, int right)
+{
+    if (left >= right) return left;
+
+    int i = left + 1;
+    if (array[i] >= array[i - 1])
+    {
+        while (i <= right && array[i] >= array[i - 1]) i++;
+    }
+    else
+    {
+        while (i <= right && array[i] < array[i - 1]) i++;
+        reverse(array + left, array + i);
+    }
+    return i - 1;
+}
+
+template<typename type>
+int gallopMode (type array[], type key, int left, int length)
+{
+
+}
+
 int getMinRunLength(int n)
 {
     int  r = 0;
@@ -102,12 +126,11 @@ void mainMenu(int str)
     system("cls");
     printf("%s1 - Work with array\n", str == 1 ? " => " : "    ");
     printf("%s2 - Timsort\n", str == 2 ? " => " : "    ");
-    printf("%s0 - Exit\n", str == 3 ? " => " : "    ");
+    printf("%s0 - Exit\n", str == 0 ? " => " : "    ");
 }
 
 void arrMenu(int str)
 {
-    system("cls");
     printf("%s 1 - Create and fill\n", str == 1 ? " => " : "    ");
     printf("%s 2 - Print elements\n", str == 2 ? " => " : "    ");
     printf("%s 3 - Insert element\n", str == 3 ? " => " : "    ");
@@ -117,12 +140,25 @@ void arrMenu(int str)
     printf("%s 0 - Exit\n", str == 0 ? " => " : "    ");
 }
 
+void timMenu(int str)
+{
+    printf("%s1 - Sort the array\n", str == 1 ? " => " : "    ");
+    printf("%s2 - \n", str == 2 ? " => " : "    ");
+    printf("%s0 - Exit\n", str == 0 ? " => " : "    ");
+}
+
 int main()
 {
 
-    int str = 1, flag = 0;
-    int str2 = 1, flag2 = 0;
-    int choice, choice2;
+
+    int flag = 0, flag2 = 0, flag3(0);
+    int current_selection_global = 1;
+    int menu_items_count_global = 3;
+    int current_selection_arr = 1;
+    int menu_items_count_arr = 7;
+    int current_selection_tim = 1;
+    int menu_items_count_tim = 3;
+    int choice, choice2, choice3;
     auto* array = new Array<int>();
 
     int value;
@@ -130,48 +166,58 @@ int main()
     int* element;
     short index;
 
-    while (flag == 0) {
-        mainMenu(str);
+    while (flag == 0)
+    {
+        mainMenu(current_selection_global);
         choice = _getch();
-        if (choice >= '1' && choice <= '2') str = choice - '0';
-        if (choice == 224) {
+        if (choice >= '0' && choice <= '2') current_selection_global = choice - '0';
+        if (choice == 224)
+        {
             choice = _getch();
-            switch (choice) {
+            switch (choice)
+            {
             case 72:
-                str = (str - 1 + 2) % 3 + 1;
+                system("cls");
+                current_selection_global = (current_selection_global - 1 + menu_items_count_global) % menu_items_count_global;
                 break;
             case 80:
-                str = (str - 1 + 1) % 3 + 1;
+                system("cls");
+                current_selection_global = (current_selection_global + 1) % menu_items_count_global;
                 break;
             }
         }
         if (choice == 13)
         {
-            switch (str)
+            switch (current_selection_global)
             {
             case 1:
                 system("cls");
-                while (flag2 == 0) {
+                while (flag2 == 0)
+                {
                     system("cls");
+                    cout << "Current array: ";
                     array->print();
-                    arrMenu(str2);
+                    cout << endl;
+                    arrMenu(current_selection_arr);
                     choice2 = _getch();
-                    if (choice2 >= '1' && choice2 <= '6') str2 = choice2 - '0';
-                    if (choice2 == 224) {
+                    if (choice2 >= '0' && choice2 <= '6') current_selection_arr = choice2 - '0';
+                    if (choice2 == 224)
+                    {
                         choice2 = _getch();
-                        switch (choice2) {
+                        switch (choice2)
+                        {
                         case 72:
-                            str2 = (str2 - 1) % 7;
+                            current_selection_arr = (current_selection_arr - 1 + menu_items_count_arr) % menu_items_count_arr;
                             break;
                         case 80:
-                            str2 = (str2 + 1) % 7;
+                            current_selection_arr = (current_selection_arr + 1) % menu_items_count_arr;
                             break;
                         }
                     }
                     if (choice2 == 13)
                     {
 
-                        switch (str2)
+                        switch (current_selection_arr)
                         {
                             case 1:
                                 cout << "Input numbers please: ";
@@ -256,24 +302,65 @@ int main()
                 break;
             case 2:
                 system("cls");
-                if (array->getSize() > 0)
+                while (flag3 == 0)
                 {
-                    cout << "Original array: ";
+                    system("cls");
+                    cout << "Current array: ";
                     array->print();
+                    cout << endl;
+                    timMenu(current_selection_tim);
+                    choice3 = _getch();
+                    if (choice3 >= '0' && choice3 <= '2') current_selection_tim = choice3 - '0';
+                    if (choice3 == 224)
+                    {
+                        choice3 = _getch();
+                        switch (choice3)
+                        {
+                        case 72:
+                            current_selection_tim = (current_selection_tim - 1 + menu_items_count_tim) % menu_items_count_tim;
+                            break;
+                        case 80:
+                            current_selection_tim = (current_selection_tim + 1) % menu_items_count_tim;
+                            break;
+                        }
+                    }
+                    if (choice3 == 13)
+                    {
+                        switch (current_selection_tim)
+                        {
+                            case 1:
+                                if (array->getSize() > 0)
+                                {
+                                    cout << "Original array: ";
+                                    array->print();
 
-                    timSort(array->getData(), array->getSize());
+                                    timSort(array->getData(), array->getSize());
 
-                    cout << "Sorted array: ";
-                    array->print();
+                                    cout << "Sorted array: ";
+                                    array->print();
+                                }
+                                else
+                                {
+                                    cout << "Array is empty!" << endl;
+                                }
+                                cout << "Press any key to continue...";
+                                _getch();
+                                break;
+                            case 2:
+                                cout << "Press any key to continue...";
+                                _getch();
+                                break;
+                            case 0:
+                                flag3 = 1;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
-                else
-                {
-                    cout << "Array is empty!" << endl;
-                }
-                cout << "Press any key to continue...";
-                _getch();
+                flag3 = 0;
                 break;
-            case 3:
+            case 0:
                 system("cls");
                 return 0;
                 break;
