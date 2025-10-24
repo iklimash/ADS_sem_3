@@ -4,4 +4,5 @@ project(lab_2)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(lab_2 main.cpp
-        array.h)
+        array.h
+        stack.h)

@@ -1,7 +1,10 @@
 #include "array.h"
+#include "stack.h"
 #include <iostream>
 #include <conio.h>
+#include <algorithm>
 
+// Тесты: 5 21 7 23 19 3 11 17 2 29 13 31 37 41 43 47 5 59 61 67 77 88 99 111 5 21 7 23 19 3 11 17 2 29 13 31 37 41 43 47 5 59 99 111 5 21 7 23 19 3 11 17 2 29 61 67 77 88 99 111
 using namespace std;
 
 int MIN_RUN = 64;
@@ -23,48 +26,121 @@ void insertSort(type array[], int left, int right)
 }
 
 template<typename type>
+int gallopMode (type array[], type key, int base, int length, int startI)
+{
+    int lastShift = 0;
+    int shift = 1;
+
+    if (key > array[base + startI])
+    {
+        int maxOffset = length - startI;
+        while (shift < maxOffset && key > array[base + startI + shift])
+        {
+            lastShift = shift;
+            shift = (shift << 1) + 1;
+        }
+        if (shift > maxOffset) shift = maxOffset;
+
+        lastShift += startI;
+        shift += startI;
+    }
+    else
+    {
+        int maxOffset = startI + 1;
+        while (shift < maxOffset && key <= array[base + startI - shift])
+        {
+            lastShift = shift;
+            shift = (shift << 1) + 1;
+        }
+        if (shift > maxOffset) shift = maxOffset;
+
+        int temp = lastShift;
+        lastShift = startI - shift;
+        shift = startI - temp;
+    }
+
+    lastShift++;
+
+    while (lastShift < shift)
+    {
+        int mid = lastShift + ((shift - lastShift) >> 1);
+        if (key > array[base + mid])
+        {
+            lastShift = mid + 1;
+        }
+        else
+        {
+            shift = mid;
+        }
+    }
+    return shift;
+}
+
+template<typename type>
 void merge(type array[], int left, int mid, int right)
 {
     int len1 = mid - left + 1;
     int len2 = right - mid;
-    int* arrLeft = new type[len1];
-    int* arrRight = new type[len2];
-    for (int i = 0; i < len1; i++)
-        arrLeft[i] = array[left + i];
-    for (int i = 0; i < len2; i++)
-        arrRight[i] = array[mid + 1 + i];
 
-    int i = 0, j = 0, k = left;
-    while (i < len1 && j < len2)
+    type* leftArr = new type[len1];
+    for (int i = 0; i < len1; i++) {
+        leftArr[i] = array[left + i];
+    }
+
+    int i = 0, j = mid + 1, k = left;
+    int gallopConst = 7;
+
+    while (i < len1 && j <= right)
     {
-        if (arrLeft[i] <= arrRight[j])
+        int gallopCount = 0;
+
+        while (i < len1 && j <= right && leftArr[i] <= array[j])
         {
-            array[k] = arrLeft[i];
-            i++;
+            array[k++] = leftArr[i++];
+            gallopCount++;
+            if (gallopCount >= gallopConst)
+            {
+                int next = gallopMode(leftArr, array[j], i, len1 - i, 0);
+                while (i < next)
+                {
+                    array[k++] = leftArr[i++];
+                }
+                break;
+            }
         }
-        else
+        gallopCount = 0;
+        while (j <= right && i < len1 && array[j] < leftArr[i])
         {
-            array[k] = arrRight[j];
-            j++;
+            array[k++] = array[j++];
+            gallopCount++;
+            if (gallopCount >= gallopConst)
+            {
+                int next = gallopMode(array, leftArr[i], j, right - j + 1, 0);
+                while (j < next)
+                {
+                    array[k++] = array[j++];
+                }
+                break;
+            }
         }
-        k++;
     }
 
     while (i < len1)
     {
-        array[k] = arrLeft[i];
-        i++;
-        k++;
+        array[k++] = leftArr[i++];
     }
-    while (j < len2)
-    {
-        array[k] = arrRight[j];
-        j++;
-        k++;
-    }
+    delete[] leftArr;
+}
 
-    delete[] arrLeft;
-    delete[] arrRight;
+int getMinRunLength(int n)
+{
+    int  r = 0;
+    while (n >= MIN_RUN)
+    {
+        r |= n & 1;
+        n >>= 1;
+    }
+    return n + r;
 }
 
 template<typename type>
@@ -86,40 +162,95 @@ int findRun (type array[], int left, int right)
 }
 
 template<typename type>
-int gallopMode (type array[], type key, int left, int length)
+void mergeInvariants(type array[], Stack<Run>& runs)
 {
-
-}
-
-int getMinRunLength(int n)
-{
-    int  r = 0;
-    while (n >= MIN_RUN)
+    while (runs.size() > 1)
     {
-        r |= n & 1;      // Запоминаем младший бит
-        n >>= 1;         // Делим n пополам
+        Run z = runs.top(); runs.pop();
+        Run y = runs.top(); runs.pop();
+
+        if (runs.size() > 0)
+        {
+            Run x = runs.top();
+
+
+            if (z.length > y.length + x.length || y.length > x.length)
+            {
+                runs.push(y);
+                runs.push(z);
+                break;
+            }
+
+            if (x.length <= z.length)
+            {
+                merge(array, x.start, x.start + x.length - 1, y.start + y.length - 1);
+                runs.pop();
+                runs.push(Run(x.start, x.length + y.length));
+                runs.push(z);
+            }
+            else
+            {
+                merge(array, y.start, y.start + y.length - 1, z.start + z.length - 1);
+                runs.push(Run(y.start, y.length + z.length));
+            }
+        }
+        else
+        {
+            if (y.length > z.length)
+            {
+                runs.push(y);
+                runs.push(z);
+                break;
+            }
+            else
+            {
+                merge(array, y.start, y.start + y.length - 1, z.start + z.length - 1);
+                runs.push(Run(y.start, y.length + z.length));
+            }
+        }
     }
-    return n + r;
 }
 
 template<typename type>
 void timSort(type array[], int n)
 {
+    if (n < 2) return;
+
     int minRun = getMinRunLength(n);
-    for (int i = 0; i < n; i += minRun)
+
+    Stack<Run> runs;
+    int i = 0;
+
+
+    while (i < n)
     {
-        insertSort(array, i, min((i + minRun - 1), (n - 1)));
-    }
-    for (int size = minRun; size < n; size *= 2 )
-    {
-        for (int left = 0; left < n; left += 2 * size)
-        {
-            int mid = left + size - 1;
-            int right = min((left + 2 * size - 1), (n - 1));
-            merge(array, left, mid, right);
+
+        int runEnd = findRun(array, i, n - 1);
+        int runLength = runEnd - i + 1;
+
+        if (runLength < minRun) {
+            int newEnd = min(i + minRun - 1, n - 1);
+            insertSort(array, i, newEnd);
+            runEnd = newEnd;
+            runLength = runEnd - i + 1;
         }
+
+        runs.push(Run(i, runLength));
+
+        mergeInvariants(array, runs);
+        i = runEnd + 1;
+    }
+
+    while (runs.size() > 1)
+    {
+        Run z = runs.top(); runs.pop();
+        Run y = runs.top(); runs.pop();
+
+        merge(array, y.start, y.start + y.length - 1, z.start + z.length - 1);
+        runs.push(Run(y.start, y.length + z.length));
     }
 }
+
 
 void mainMenu(int str)
 {
@@ -143,7 +274,6 @@ void arrMenu(int str)
 void timMenu(int str)
 {
     printf("%s1 - Sort the array\n", str == 1 ? " => " : "    ");
-    printf("%s2 - \n", str == 2 ? " => " : "    ");
     printf("%s0 - Exit\n", str == 0 ? " => " : "    ");
 }
 
@@ -157,7 +287,7 @@ int main()
     int current_selection_arr = 1;
     int menu_items_count_arr = 7;
     int current_selection_tim = 1;
-    int menu_items_count_tim = 3;
+    int menu_items_count_tim = 2;
     int choice, choice2, choice3;
     auto* array = new Array<int>();
 
@@ -310,7 +440,7 @@ int main()
                     cout << endl;
                     timMenu(current_selection_tim);
                     choice3 = _getch();
-                    if (choice3 >= '0' && choice3 <= '2') current_selection_tim = choice3 - '0';
+                    if (choice3 >= '0' && choice3 <= '1') current_selection_tim = choice3 - '0';
                     if (choice3 == 224)
                     {
                         choice3 = _getch();
