@@ -2,7 +2,6 @@
 #include "stack.h"
 #include <iostream>
 #include <conio.h>
-#include <algorithm>
 
 // Тесты: 5 21 7 23 19 3 11 17 2 29 13 31 37 41 43 47 5 59 61 67 77 88 99 111 5 21 7 23 19 3 11 17 2 29 13 31 37 41 43 47 5 59 99 111 5 21 7 23 19 3 11 17 2 29 61 67 77 88 99 111
 using namespace std;
@@ -83,7 +82,8 @@ void merge(type array[], int left, int mid, int right)
     int len2 = right - mid;
 
     type* leftArr = new type[len1];
-    for (int i = 0; i < len1; i++) {
+    for (int i = 0; i < len1; i++)
+    {
         leftArr[i] = array[left + i];
     }
 
@@ -141,6 +141,24 @@ int getMinRunLength(int n)
         n >>= 1;
     }
     return n + r;
+}
+
+template <typename type>
+void reverse(type* first, type* last)
+{
+    type* left = first;
+    type* right = last - 1;
+
+    while (left < right)
+    {
+
+        type temp = *left;
+        *left = *right;
+        *right = temp;
+
+        left++;
+        right--;
+    }
 }
 
 template<typename type>
