@@ -1,0 +1,229 @@
+#ifndef LAB_3_BINARYTREE_H
+#define LAB_3_BINARYTREE_H
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <stdexcept>
+using namespace std;
+
+template <typename type>
+struct Node
+{
+    type data;
+    Node<type> *left;
+    Node<type> *right;
+
+    Node(const type& value) : data(value), left(nullptr), right(nullptr) {}
+    string toString() const
+    {
+        return to_string(data);
+    }
+};
+
+template <typename type>
+class BinaryTree
+{
+public:
+
+    BinaryTree() : root(nullptr) {}
+
+    ~BinaryTree()
+    {
+        clearSupport(root);
+    }
+
+    // Pre-order: корень -> левое -> правое
+    static void depthFirstPreOrder(const Node<type>* node)
+    {
+        if (!node) return;
+        std::cout << node->data << " ";
+        depthFirstPreOrder(node->left);
+        depthFirstPreOrder(node->right);
+    }
+
+    // In-order: левое -> корень -> правое
+    static void depthFirstInOrder(const Node<type>* node)
+    {
+        if (!node) return;
+        depthFirstInOrder(node->left);
+        std::cout << node->data << " ";
+        depthFirstInOrder(node->right);
+    }
+
+    // Post-order: левое -> правое -> корень
+    static void depthFirstPostOrder(const Node<type>* node)
+    {
+        if (!node) return;
+        depthFirstPostOrder(node->left);
+        depthFirstPostOrder(node->right);
+        std::cout << node->data << " ";
+    }
+
+    void output(Node<type>* node, const string& prefix, bool isTail, string* str)
+    {
+        if (str == nullptr || node == nullptr)
+        {
+            return;
+        }
+
+        if (node->right != nullptr)
+        {
+            string newPrefix = prefix;
+            if (isTail) {
+                newPrefix += "    ";
+            } else {
+                newPrefix += "|   ";
+            }
+            output(node->right, newPrefix, false, str);
+        }
+
+        *str += prefix;
+        if (isTail) {
+            *str += "|___ ";
+        } else {
+            *str += "|~~~ ";
+        }
+        *str += node->toString() + "\n";
+
+        if (node->left != nullptr)
+        {
+            string newPrefix = prefix;
+            if (isTail) {
+                newPrefix += "    ";
+            } else {
+                newPrefix += "|   ";
+            }
+            output(node->left, newPrefix, true, str);
+        }
+    }
+
+    string treeToString(Node<type>* root)
+    {
+        string result;
+        output(root, "", true, &result);
+        return result;
+    }
+
+    void parseFromString(const string& str)
+    {
+        clear();
+        size_t pos = 0;
+        root = parseSubtree(str, pos);
+
+        if (pos < str.length())
+        {
+            throw invalid_argument("Invalid bracket notation format");
+        }
+    }
+
+    void loadFromFile(const string& filename)
+    {
+        ifstream file(filename);
+        if (!file.is_open())
+        {
+            throw runtime_error("Cannot open file: " + filename);
+        }
+
+        string line;
+        getline(file, line);
+        file.close();
+
+        parseFromString(line);
+    }
+
+    bool isEmpty() const
+    {
+        return root == nullptr;
+    }
+
+    Node<type> *getRoot() const
+    {
+        return root;
+    }
+
+    void clear()
+    {
+        clearSupport(root);
+        root = nullptr;
+    }
+
+private:
+
+    Node<type>* root;
+
+    Node<type>* parseSubtree(const string& str, size_t& pos)
+    {
+        skipWhitespace(str, pos);
+
+        if (pos >= str.length() || str[pos] != '(')
+        {
+            throw invalid_argument("Expected '(' at position " + to_string(pos));
+        }
+        pos++;
+
+        skipWhitespace(str, pos);
+
+        type value = readValue(str, pos);
+        Node<type>* node = new Node<type>(value);
+
+        skipWhitespace(str, pos);
+
+        if (pos < str.length() && str[pos] == '(')
+        {
+            node->left = parseSubtree(str, pos);
+            skipWhitespace(str, pos);
+        }
+
+        if (pos < str.length() && str[pos] == '(')
+        {
+            node->right = parseSubtree(str, pos);
+            skipWhitespace(str, pos);
+        }
+
+        if (pos >= str.length() || str[pos] != ')')
+        {
+            throw invalid_argument("Expected ')' at position " + to_string(pos));
+        }
+        pos++;
+
+        return node;
+    }
+
+    void skipWhitespace(const string& str, size_t& pos)
+    {
+        while (pos < str.length() && isspace(str[pos]))
+        {
+            pos++;
+        }
+    }
+
+
+    type readValue(const string& str, size_t& pos)
+    {
+        size_t start = pos;
+        while (pos < str.length() && (isdigit(str[pos]) || str[pos] == '-'))
+        {
+            pos++;
+        }
+
+        if (start == pos)
+        {
+            throw invalid_argument("Expected number at position " + to_string(pos));
+        }
+
+        string valueStr = str.substr(start, pos - start);
+        return stoi(valueStr);
+    }
+
+    void clearSupport(Node<type>* node)
+    {
+        if (!node) return;
+        clearSupport(node->left);
+        clearSupport(node->right);
+        delete node;
+    }
+
+};
+
+#endif //LAB_3_BINARYTREE_H
