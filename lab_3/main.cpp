@@ -23,7 +23,7 @@ int main()
                 BinaryTree<int> treeFromFile;
                 treeFromFile.loadFromFile("tree.txt");
                 cout << "Tree structure from file:" << endl;
-                cout << treeFromFile.treeToString(treeFromFile.getRoot()) << endl;
+                treeFromFile.printTree();
 
                 cout << "Pre-order: ";
                 treeFromFile.depthFirstPreOrder(treeFromFile.getRoot());

@@ -37,7 +37,7 @@ public:
     static void depthFirstPreOrder(const Node<type>* node)
     {
         if (!node) return;
-        std::cout << node->data << " ";
+        cout << node->data << " ";
         depthFirstPreOrder(node->left);
         depthFirstPreOrder(node->right);
     }
@@ -47,7 +47,7 @@ public:
     {
         if (!node) return;
         depthFirstInOrder(node->left);
-        std::cout << node->data << " ";
+        cout << node->data << " ";
         depthFirstInOrder(node->right);
     }
 
@@ -57,47 +57,111 @@ public:
         if (!node) return;
         depthFirstPostOrder(node->left);
         depthFirstPostOrder(node->right);
-        std::cout << node->data << " ";
+        cout << node->data << " ";
     }
-
-    void output(Node<type>* node, const string& prefix, bool isTail, string* str)
+    // Добавьте этот метод в public секцию класса BinaryTree
+    void printTree() const
     {
-        if (str == nullptr || node == nullptr)
+        if (!root)
         {
+            cout << "Tree is empty" << endl;
             return;
         }
 
-        if (node->right != nullptr)
+        struct QueueItem
         {
-            string newPrefix = prefix;
-            if (isTail) {
-                newPrefix += "    ";
-            } else {
-                newPrefix += "|   ";
-            }
-            output(node->right, newPrefix, false, str);
-        }
+            Node<type>* node;
+            QueueItem* next;
+            QueueItem(Node<type>* n) : node(n), next(nullptr) {}
+        };
 
-        *str += prefix;
-        if (isTail) {
-            *str += "|___ ";
-        } else {
-            *str += "|~~~ ";
-        }
-        *str += node->toString() + "\n";
-
-        if (node->left != nullptr)
+        class SimpleQueue
         {
-            string newPrefix = prefix;
-            if (isTail) {
-                newPrefix += "    ";
-            } else {
-                newPrefix += "|   ";
+            QueueItem* front;
+            QueueItem* rear;
+        public:
+            SimpleQueue() : front(nullptr), rear(nullptr) {}
+            ~SimpleQueue() { clear(); }
+
+            void enqueue(Node<type>* node)
+            {
+                QueueItem* newItem = new QueueItem(node);
+                if (!rear) front = rear = newItem;
+                else {
+                    rear->next = newItem;
+                    rear = newItem;
+                }
             }
-            output(node->left, newPrefix, true, str);
+
+            Node<type>* dequeue()
+            {
+                if (!front) return nullptr;
+                QueueItem* temp = front;
+                Node<type>* result = front->node;
+                front = front->next;
+                if (!front) rear = nullptr;
+                delete temp;
+                return result;
+            }
+
+            bool isEmpty() const { return front == nullptr; }
+
+            int size() const
+            {
+                int count = 0;
+                QueueItem* current = front;
+                while (current) {
+                    count++;
+                    current = current->next;
+                }
+                return count;
+            }
+
+            void clear()
+            {
+                while (!isEmpty()) dequeue();
+            }
+        };
+
+        SimpleQueue q;
+        q.enqueue(root);
+
+
+        while (!q.isEmpty())
+        {
+            int levelSize = q.size();
+
+            for (int i = 0; i < levelSize; i++)
+            {
+                Node<type>* current = q.dequeue();
+
+                cout << current->data;
+
+                if (current->left || current->right) {
+                    cout << " [";
+                    if (current->left) {
+                        cout << "L:" << current->left->data;
+                    } else {
+                        cout << "L:-";
+                    }
+                    cout << " ";
+                    if (current->right) {
+                        cout << "R:" << current->right->data;
+                    } else {
+                        cout << "R:-";
+                    }
+                    cout << "]";
+                }
+
+                cout << "   ";
+
+                if (current->left) q.enqueue(current->left);
+                if (current->right) q.enqueue(current->right);
+            }
+            cout << endl;
         }
     }
-
+    
     string treeToString(Node<type>* root)
     {
         string result;

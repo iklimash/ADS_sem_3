@@ -178,7 +178,8 @@ class AVLTree
         {
             int levelSize = 0;
             QueueNode* current = q.getFront();
-            while (current) {
+            while (current)
+            {
                 levelSize++;
                 current = current->next;
             }
@@ -186,7 +187,26 @@ class AVLTree
             for (int i = 0; i < levelSize; i++)
             {
                 Node* current = q.dequeue();
-                cout << current->data << "(" << current->height << ") ";
+
+                cout << current->data << "(" << current->height << ")";
+
+
+                if (current->left || current->right) {
+                    cout << " [";
+                    if (current->left) {
+                        cout << "L:" << current->left->data;
+                    } else {
+                        cout << "L:-";
+                    }
+                    if (current->right) {
+                        cout << " R:" << current->right->data;
+                    } else {
+                        cout << " R:-";
+                    }
+                    cout << "]";
+                }
+
+                cout << "   ";
 
                 if (current->left)
                 {
