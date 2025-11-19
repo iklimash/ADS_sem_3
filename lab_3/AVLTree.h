@@ -2,7 +2,7 @@
 #define LAB_3_AVLTREE_H
 
 #include <iostream>
-
+#include <sstream>
 using namespace std;
 
 template<typename type>
@@ -188,8 +188,7 @@ class AVLTree
             {
                 Node* current = q.dequeue();
 
-                cout << current->data << "(" << current->height << ")";
-
+                cout << current->data;
 
                 if (current->left || current->right) {
                     cout << " [";

@@ -161,7 +161,7 @@ public:
             cout << endl;
         }
     }
-    
+
     string treeToString(Node<type>* root)
     {
         string result;
@@ -261,8 +261,6 @@ private:
             pos++;
         }
     }
-
-
     type readValue(const string& str, size_t& pos)
     {
         size_t start = pos;

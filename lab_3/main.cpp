@@ -3,7 +3,18 @@
 #include <iostream>
 
 
+
 using namespace std;
+void menuAVLtree()
+{
+    cout << "1 - Insert element" << endl;
+    cout << "2 - Delete element" << endl;
+    cout << "3 - Search element" << endl;
+    cout << "4 - Breadth-first traversal" << endl;
+    cout << "5 - Depth-first traversal" << endl;
+    cout << "6 - Print" << endl;
+    cout << "0 - Back to main menu\n> ";
+}
 
 int main()
 {
@@ -38,47 +49,92 @@ int main()
             }
             case 2:
             {
-                AVLTree<int> tree;
-                cout << "Insert element: ";
-                int values[] = {10, 20, 30, 40, 50, 25};
-                for (int i = 0; i < 6; i++)
+                int choiceTree;
+                int deleteValue;
+                AVLTree<int> AVLtree;
+                while (true)
                 {
-                    cout << values[i] << " ";
-                    tree.insert(values[i]);
+                    menuAVLtree();
+                    cin >> choiceTree;
+                    switch (choiceTree)
+                    {
+                        case 1:
+                        {
+                            cout << "Insert element: ";
+
+                            cin.ignore();
+                            string input;
+                            getline(cin, input);
+                            stringstream ss(input);
+                            int values;
+
+                            while (ss >> values)
+                            {
+                                AVLtree.insert(values);
+                            }
+                            cout << "Current tree structure:" << endl;
+                            AVLtree.printTree();
+                            break;
+                        }
+                        case 2:
+                        {
+                            cout << "Input element: ";
+                            cin >> deleteValue;
+
+                            AVLtree.remove(deleteValue);
+                            AVLtree.printTree();
+                            cout << endl;
+                            break;
+                        }
+                        case 3:
+                        {
+                            cout << "Search element: ";
+                            cin.ignore();
+                            string input;
+                            getline(cin, input);
+                            stringstream ss(input);
+                            int value;
+                            while (ss >> value)
+                            {
+                                cout << (AVLtree.search(value) ? "Search" : "not search");
+                            }
+                            cout << endl;
+                            break;
+                        }
+                        case 4:
+                        {
+                            cout << "Breadth-first traversal: ";
+                            AVLtree.breadthFirstTraversal();
+                            break;
+                        }
+                        case 5:
+                        {
+                            cout << "Pre-order: ";
+                            AVLtree.preOrderTraversal();
+                            cout << "In-order: ";
+                            AVLtree.inOrderTraversal();
+                            cout << "Post-order: ";
+                            AVLtree.postOrderTraversal();
+                            cout << endl;
+                            break;
+                        }
+                        case 6:
+                        {
+                            cout << "Current tree structure:" << endl;
+                            AVLtree.printTree();
+                            break;
+                        }
+                        case 0:
+                        {break;}
+                        default:
+                            cout << "Invalid choice! Please try again." << endl;
+                            break;
+                    }
+                    if (choiceTree == 0)
+                    {
+                        break;
+                    }
                 }
-                cout << endl << endl;
-
-                cout << "Content:" << endl;
-                tree.printTree();
-                cout << endl;
-
-                cout << "Breadth-first traversal: ";
-                tree.breadthFirstTraversal();
-
-                cout << "Pre-order: ";
-                tree.preOrderTraversal();
-
-                cout << "In-order: ";
-                tree.inOrderTraversal();
-
-                cout << "Post-order: ";
-                tree.postOrderTraversal();
-                cout << endl;
-
-                cout << "Search element:" << std::endl;
-                cout << "25: " << (tree.search(25) ? "Search" : "not search") << endl;
-                cout << "35: " << (tree.search(35) ? "Search" : "not search") << endl;
-                cout << endl;
-
-                cout << "Delete 25:" << endl;
-                tree.remove(25);
-                tree.printTree();
-                cout << endl;
-
-                cout << "Delete 30:" << endl;
-                tree.remove(30);
-                tree.printTree();
-
                 break;
             }
             case 0:
