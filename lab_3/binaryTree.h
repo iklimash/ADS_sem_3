@@ -59,6 +59,68 @@ public:
         depthFirstPostOrder(node->right);
         cout << node->data << " ";
     }
+    // Breadth-first traversal
+    static void breadthFirst(const Node<type>* node)
+    {
+        if (!node) return;
+
+        struct QueueItem
+        {
+            const Node<type>* node;
+            QueueItem* next;
+            QueueItem(const Node<type>* n) : node(n), next(nullptr) {}
+        };
+
+        class SimpleQueue
+        {
+            QueueItem* front;
+            QueueItem* rear;
+        public:
+            SimpleQueue() : front(nullptr), rear(nullptr) {}
+            ~SimpleQueue() { clear(); }
+
+            void enqueue(const Node<type>* node)
+            {
+                QueueItem* newItem = new QueueItem(node);
+                if (!rear) front = rear = newItem;
+                else
+                {
+                    rear->next = newItem;
+                    rear = newItem;
+                }
+            }
+
+            const Node<type>* dequeue()
+            {
+                if (!front) return nullptr;
+                QueueItem* temp = front;
+                const Node<type>* result = front->node;
+                front = front->next;
+                if (!front) rear = nullptr;
+                delete temp;
+                return result;
+            }
+
+            bool isEmpty() const { return front == nullptr; }
+
+            void clear()
+            {
+                while (!isEmpty()) dequeue();
+            }
+        };
+
+        SimpleQueue q;
+        q.enqueue(node);
+
+        while (!q.isEmpty())
+        {
+            const Node<type>* current = q.dequeue();
+            cout << current->data << " ";
+
+            if (current->left) q.enqueue(current->left);
+            if (current->right) q.enqueue(current->right);
+        }
+    }
     // Добавьте этот метод в public секцию класса BinaryTree
     void printTree() const
     {

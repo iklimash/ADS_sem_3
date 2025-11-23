@@ -17,15 +17,6 @@ class AVLTree
         root = copy(other.root);
     }
 
-    AVLTree& operator=(const AVLTree& other)
-    {
-        if (this != &other) {
-            clear();
-            root = copy(other.root);
-        }
-        return *this;
-    }
-
     ~AVLTree()
     {
         clear();

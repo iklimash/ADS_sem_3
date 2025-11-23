@@ -35,7 +35,9 @@ int main()
                 treeFromFile.loadFromFile("tree.txt");
                 cout << "Tree structure from file:" << endl;
                 treeFromFile.printTree();
-
+                cout << "Breadth-first traversal: ";
+                treeFromFile.breadthFirst(treeFromFile.getRoot());
+                cout << endl;
                 cout << "Pre-order: ";
                 treeFromFile.depthFirstPreOrder(treeFromFile.getRoot());
                 cout << endl;
