@@ -2,11 +2,12 @@
 #define GRAPH_H
 
 #include <iostream>
-#include <cstring>
+#include <string>
+
+using namespace std;
 
 const int MAX_VERTICES = 50;
 const int MAX_EDGES = 50;
-const int NAME_LEN = 50;
 const int MAX_EDGES_PER_VERTEX = 10; // макс кол-во ребер из одной вершины
 
 struct Edge {
@@ -17,9 +18,10 @@ struct Edge {
 
 class Graph {
 public:
+
     int V;
 
-    char names[MAX_VERTICES][NAME_LEN];
+    string names[MAX_VERTICES];
 
     // у каждой вершины есть массив рёбер adj[i]
     // рёбра хранятся в Edge-массивах
@@ -29,14 +31,14 @@ public:
 
     Graph(int v = 0);
 
-    void SetVertexName(int idx, const char* name);
-    int FindVertexIndex(const char* name) const;
+    void SetVertexName(int idx, const string& name);
+    int FindVertexIndex(const string& name) const;
 
     void AddEdgeByIndex(int vi, int vj, int weight);
 
     void DFS();
     void DFSFun(int v, bool visited[]);
-    void BFS(const char* startName);
+    void BFS(const string& startName);
     void Print();
     // крускал
     void FindMinSpanningTree();
