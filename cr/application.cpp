@@ -69,109 +69,38 @@ Graph* ParseAdjacencyMatrix(const string& filePath)
     return g;
 }
 
-void printMenu()
-{
-    cout << "Main menu:\n";
-    cout << "1. Initialization Graph\n";
-    cout << "2. Graph traversal\n";
-    cout << "3. Find Min Spanning Tree\n";
-    cout << "4. Print Graph\n";
-    cout << "0. Exit\n";
-}
 
-void application()
-{
+void application() {
     Graph* graph = nullptr;
     int choice = 0;
 
-    printMenu();
+    string filename = "graph.txt";
 
-    while (true)
+
+    Graph* g = ParseAdjacencyMatrix(filename);
+    if (g != nullptr)
     {
-        cout << "Enter your choice: ";
-
-        if (!(cin >> choice))
-        {
-            cin.clear();
-            cin.ignore(10000, '\n');
-            cout << "Invalid input, try again\n";
-            continue;
-        }
-
-        switch (choice)
-        {
-        case 1:
-        {
-            string filename;
-            cout << "Enter filename: ";
-            cin >> filename;
-
-            Graph* g = ParseAdjacencyMatrix(filename);
-            if (g != nullptr)
-            {
-                if (graph != nullptr) delete graph;
-                graph = g;
-            }
-            break;
-        }
-
-        case 2:
-        {
-            if (!graph)
-            {
-                cout << "Graph not loaded\n";
-                break;
-            }
-
-            cout << "1) DFS\n2) BFS\nEnter choice: ";
-            int t;
-            cin >> t;
-
-            if (t == 1)
-            {
-                cout << "DFS: ";
-                graph->DFS();
-            }
-            else if (t == 2)
-            {
-                string start = "A";
-                cout << "BFS from \"" << start << "\": ";
-                graph->BFS(start);
-            }
-            break;
-        }
-
-        case 3:
-        {
-            if (!graph)
-            {
-                cout << "Graph not loaded\n";
-                break;
-            }
-            graph->FindMinSpanningTree();
-            break;
-        }
-
-        case 4:
-        {
-            if (!graph)
-            {
-                cout << "Graph not loaded\n";
-                break;
-            }
-            cout << "Graph:\n";
-            graph->Print();
-            break;
-        }
-
-        case 0:
-        {
-            if (graph) delete graph;
-            return;
-        }
-
-        default:
-            cout << "Unknown choice, try again\n";
-        }
+        if (graph != nullptr) delete graph;
+        graph = g;
     }
+    if (!graph)
+    {
+        cout << "Graph not loaded\n";
+    }
+
+    cout << "Graph:\n";
+    graph->Print(); cout << endl;
+
+    cout << "1) DFS: ";
+    graph->DFS(); cout << endl;
+
+    cout << "2) BFS: ";
+    string start = "A";
+    cout << "BFS from \"" << start << "\": ";
+    graph->BFS(start); cout << endl;
+
+    cout << "Find Min Spanning Tree\n";
+    graph->FindMinSpanningTree(); cout << endl;
 }
+
+
